@@ -50,7 +50,7 @@ function svg({ w, h, label, colors, content }) {
   ${content}
   <g font-family="Helvetica, Arial, sans-serif" fill="#000" opacity=".45">
     <text x="${w / 2}" y="${h * 0.5 - fs * 0.4}" text-anchor="middle" font-size="${fs}" letter-spacing="${fs * 0.3}">PLACEHOLDER</text>
-    <text x="${w / 2}" y="${h * 0.5 + fs}" text-anchor="middle" font-size="${fs * 0.8}" letter-spacing="${fs * 0.08}">${label}</text>
+    <text x="${w / 2}" y="${h * 0.5 + fs}" text-anchor="middle" font-size="${fs * 0.8}" letter-spacing="${fs * 0.08}">${label.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</text>
   </g>
 </svg>`;
 }
