@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0a0a0a;
+  --color-paper: #f4f4f2;
+  --color-cream: #ede7de;
+  --color-sand: #d9cfc1;
+  --color-stone: #8a8580;
+  --color-line: #d8d6d1;
+
+  /* Latin glyphs use Inter / Cormorant; Korean & Chinese glyphs fall through to the
+     per-language CJK fonts set on :lang() below. */
+  --font-sans: var(--font-inter), var(--cjk-sans, "Helvetica Neue"), Helvetica, Arial, sans-serif;
+  --font-display: var(--font-cormorant), var(--cjk-serif, "Times New Roman"), serif;
+
+  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-lux: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-pulse-ring: pulse-ring 2.4s var(--ease-lux) infinite;
+
+  @keyframes marquee {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(1); opacity: 0.6; }
+    80%, 100% { transform: scale(2.6); opacity: 0; }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-paper text-ink font-sans;
+  }
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  button { cursor: pointer; }
+}
+
+/* ---------- Korean & Chinese typography ---------- */
+:root:lang(ko) {
+  --cjk-sans: "Apple SD Gothic Neo", "Pretendard", "Malgun Gothic", "Noto Sans KR";
+  --cjk-serif: var(--font-serif-kr);
+}
+:root:lang(zh-Hans) {
+  --cjk-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC";
+  --cjk-serif: var(--font-serif-sc);
+}
+/* CJK reads better with looser line height, no negative tracking and gentler eyebrow spacing */
+/* Korean wraps at spaces (keep-all); Chinese wraps between characters (normal).
+   overflow-wrap:anywhere is a safety net for very long words in large headings. */
+:lang(ko) body { word-break: keep-all; overflow-wrap: anywhere; }
+:lang(zh-Hans) body { line-break: strict; overflow-wrap: anywhere; }
+:lang(ko) .display, :lang(zh-Hans) .display,
+:lang(ko) .h-section, :lang(zh-Hans) .h-section { letter-spacing: 0; line-height: 1.22; }
+:lang(ko) .eyebrow, :lang(zh-Hans) .eyebrow { letter-spacing: 0.14em; }
+:lang(ko) h1.display, :lang(zh-Hans) h1.display { line-height: 1.15; }
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: clip; }
+
+@layer components {
+  .container-lux {
+    @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-14;
+  }
+  .eyebrow {
+    @apply text-[11px] font-medium uppercase tracking-[0.28em];
+  }
+  .display {
+    font-family: var(--font-display);
+    @apply font-light tracking-[-0.01em];
+  }
+  .h-section {
+    font-family: var(--font-display);
+    @apply text-[2.4rem] leading-[1.02] font-light tracking-[-0.015em] sm:text-5xl lg:text-[4.25rem];
+  }
+
+  /* pill buttons with a fill that rises from below on hover */
+  .btn {
+    @apply relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-full px-7 py-3.5 text-[12px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 ease-lux;
+  }
+  .btn::before {
+    content: "";
+    @apply absolute inset-0 -z-10 translate-y-[101%] rounded-full transition-transform duration-500 ease-lux;
+  }
+  .btn:hover::before { transform: translateY(0); }
+  .btn-dark { @apply bg-ink text-paper; }
+  .btn-dark::before { @apply bg-stone; }
+  .btn-light { @apply bg-paper text-ink; }
+  .btn-light::before { @apply bg-ink; }
+  .btn-light:hover { @apply text-paper; }
+  .btn-outline { @apply border border-current; }
+  .btn-outline::before { @apply bg-ink; }
+  .btn-outline:hover { @apply text-paper border-ink; }
+  .btn-outline-light { @apply border border-white/70 text-white; }
+  .btn-outline-light::before { @apply bg-white; }
+  .btn-outline-light:hover { @apply text-ink; }
+
+  /* underline that grows from the left */
+  .link-underline {
+    @apply relative inline-block;
+  }
+  .link-underline::after {
+    content: "";
+    @apply absolute -bottom-0.5 left-0 h-px w-full origin-right scale-x-0 bg-current transition-transform duration-500 ease-lux;
+  }
+  .link-underline:hover::after,
+  .link-underline[aria-current="page"]::after,
+  .link-underline:focus-visible::after {
+    @apply origin-left scale-x-100;
+  }
+
+  .field {
+    @apply w-full border-0 border-b border-current/30 bg-transparent px-0 py-3 text-base outline-none transition-colors duration-300 placeholder:text-current/45 focus:border-current;
+  }
+
+  .mask-fade-x {
+    mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
