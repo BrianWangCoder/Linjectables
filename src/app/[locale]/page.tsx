@@ -46,8 +46,8 @@ export default async function HomePage({ params }: Props) {
         </Reveal>
       </section>
 
-      <TreatmentsSection catalogue={catalogue} t={t} />
       <Injector injector={s.injector} t={t} />
+      <TreatmentsSection catalogue={catalogue} t={t} />
       <ClinicGallery experience={s.experience} />
       <CtaBand heading={s.cta.heading} text={s.cta.text} t={t} />
     </>
