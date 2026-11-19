@@ -91,18 +91,22 @@ export default function Header({ menu }: { menu: MenuItem[] }) {
               {NAV.map((item) =>
                 item.mega ? (
                   <li key={item.href} onMouseEnter={openMega} onMouseLeave={closeMega}>
-                    <button
+                    {/* Hover (or keyboard focus) opens the dropdown; clicking goes to the all-treatments page. */}
+                    <Link
+                      href={item.href}
                       className="link-underline flex items-center gap-1.5 text-[12px] uppercase tracking-[0.2em]"
+                      aria-current={pathname === item.href ? "page" : undefined}
+                      aria-haspopup="true"
                       aria-expanded={megaOpen}
                       aria-controls="mega-menu"
-                      onClick={() => setMegaOpen((v) => !v)}
+                      onClick={() => setMegaOpen(false)}
                       onFocus={openMega}
                     >
                       {item.label}
                       <svg width="9" height="6" viewBox="0 0 9 6" className={cn("transition-transform duration-500 ease-lux", megaOpen && "rotate-180")} aria-hidden>
                         <path d="M1 1l3.5 3.5L8 1" stroke="currentColor" fill="none" />
                       </svg>
-                    </button>
+                    </Link>
                   </li>
                 ) : (
                   <li key={item.href}>
